@@ -1,15 +1,34 @@
 import { scoreBowlingGame, convertScore, prepareData } from "../src/calc_score";
 describe("test scoreBowlingGame function", () => {
   test("test case with ONLY NUMBERS in the string - just summarise", () => {
-    expect(scoreBowlingGame("222")).toBe(6);
+    // Arrange
+    const rolls = "222";
+    const expectedResult = 6;
+
+    // Act
+    const act = scoreBowlingGame(rolls);
+
+    // Assert
+    expect(act).toBe(expectedResult);
   });
+
   // '/' - spare case - add next throw (and bonus throw if it is the last roll)
+  // I added optional parameter framesCount (by default is 10) to make testing process easier
   test("test '/' - SPARE case add 10 points for a throw + next throw)", () => {
     expect(scoreBowlingGame("2/35", 2)).toBe(21);
   });
-  test("test '/' - SPARE case add 10 points for a throw + next throw + bonus throw if it is the LAST ROLL", () => {
+  test("test '/' - SPARE case in the LAST ROLL add 10 points for the roll + points from 1 bonus roll", () => {
     expect(scoreBowlingGame("113/5", 2)).toBe(17);
   });
+
+  // '-' cases - no pins knocked down
+  test("ZERO points", () => {
+    expect(scoreBowlingGame("------", 3)).toBe(0);
+  });
+  test("'-/' - add 10 points", () => {
+    expect(scoreBowlingGame("-/----", 3)).toBe(10);
+  });
+
   // 'x' - strike. The score for the frame is 10 + the simple total of the pins knocked down in his next two rolls.
   test("add 10 points for the STRIKE", () => {
     expect(scoreBowlingGame("X11", 2)).toBe(14);
@@ -23,19 +42,16 @@ describe("test scoreBowlingGame function", () => {
   test("add 10 points for the STRIKE in the LAST ROLL + 2 bonus roll (spare)", () => {
     expect(scoreBowlingGame("11X5/", 2)).toBe(22);
   });
+  test("add 10 points for the STRIKE in the LAST ROLL + 2 bonus roll (first with no points, second - 10 points)", () => {
+    expect(scoreBowlingGame("11X-/", 2)).toBe(22);
+  });
   test("add 10 points for the STRIKE in the LAST ROLL + 2 bonus roll (last with no points)", () => {
     expect(scoreBowlingGame("11X5-", 2)).toBe(17);
   });
   test("add 10 points for the STRIKE in the LAST ROLL + 2 bonus roll (first with no points)", () => {
     expect(scoreBowlingGame("11X-5", 2)).toBe(17);
   });
-  // '-' cases
-  test("ZERO points", () => {
-    expect(scoreBowlingGame("------", 3)).toBe(0);
-  });
-  test("'-/' - add 10 points", () => {
-    expect(scoreBowlingGame("-/----", 3)).toBe(10);
-  });
+
   // Suggested Test Cases
   test("Suggested Test Cases 1", () => {
     expect(scoreBowlingGame("X X X X X X X X X X X X")).toBe(300);
