@@ -3,8 +3,6 @@ export function scoreBowlingGame(rolls: string, framesCount = 10) {
   const score = prepareData(rolls)
     .split("")
     .reduce((sum, currentThrow, id, rolls) => {
-      console.log("id= " + id, rolls[id]);
-
       if (move < framesCount * 2) {
         if (Number(currentThrow)) {
           sum += parseInt(currentThrow);
@@ -31,7 +29,6 @@ export function scoreBowlingGame(rolls: string, framesCount = 10) {
           }
         }
       }
-      console.log("move ", move, " sum=", sum);
       ++move;
       return sum;
     }, 0);
